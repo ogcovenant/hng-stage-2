@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import db from "../../common/config/dbconfig";
 import { responseObject } from "../../common/utils/responseObject";
 import { encodeJWT } from "../../common/utils/jwt";
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
 import { ENVIRONMENT } from "../../common/config/environment";
 
 export const createUser = async (req: Request, res: Response) => {
@@ -29,7 +29,7 @@ export const createUser = async (req: Request, res: Response) => {
       lastName: lastName,
       email: email,
       password: await bcrypt.hash(password, Number(ENVIRONMENT.HASH_SALT)),
-      phone: phone
+      phone: phone,
     };
 
     const user = await db.user.create({
@@ -46,12 +46,14 @@ export const createUser = async (req: Request, res: Response) => {
     const jwtToken = await encodeJWT(user.id);
 
     //@ts-ignore
-    if(!user && !user.id){
-      return res.status(400).json(responseObject({
-        status: "Bad request",
-        message: "Registration unsuccessful",
-        statusCode: 400
-      }))
+    if (!user && !user.id) {
+      return res.status(400).json(
+        responseObject({
+          status: "Bad request",
+          message: "Registration unsuccessful",
+          statusCode: 400,
+        })
+      );
     }
 
     return res.status(201).json(
@@ -75,4 +77,59 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-export const checkUser = async (req: Request, res: Response) => {};
+export const checkUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    const existingUser = await db.user.findFirst({
+      where: {
+        email: email,
+      },
+    });
+
+    //@ts-ignore
+    if (!existingUser && !existingUser.id) {
+      return res.status(401).json(
+        responseObject({
+          status: "Bad request",
+          message: "Authentication failed",
+          statusCode: 401,
+        })
+      );
+    }
+
+    //@ts-ignore
+    const passwordMatch = await bcrypt.compare(password, existingUser.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json(
+        responseObject({
+          status: "Bad request",
+          message: "Authentication failed",
+          statusCode: 401,
+        })
+      );
+    }
+
+    //@ts-ignore
+    const jwtToken = await encodeJWT(existingUser.id);
+
+    return res.status(200).json(responseObject({
+      status: "success",
+      message: "Login successful",
+      data: {
+        accessToken: jwtToken,
+        user: {
+          userId: existingUser?.id,
+          firstName: existingUser?.firstName,
+          lastName: existingUser?.lastName,
+          email: existingUser?.email,
+          phone: existingUser?.phone
+        }
+      }
+    }))
+
+  } catch (err) {
+    return res.status(500).json({ message: "An error occurred!", error: err });
+  }
+};

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "HNG Stage 2",
   "scripts": {
-    "start": "node ./build/index.js",
+    "start": "tsc && node ./build/index.js",
     "build": "tsc",
     "start:dev": "ts-node-dev ./src/index.ts"
   },

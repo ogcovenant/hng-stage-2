@@ -23,11 +23,32 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ENVIRONMENT = void 0;
-const dotenv = __importStar(require("dotenv"));
-dotenv.config();
-exports.ENVIRONMENT = {
-    PORT: process.env.PORT || 5000,
-    JWT_SECRET: process.env.JWT_SECRET,
-    HASH_SALT: process.env.HASH_SALT
+exports.decodeJWT = exports.encodeJWT = void 0;
+const jwt = __importStar(require("jsonwebtoken"));
+const environment_1 = require("../config/environment");
+const encodeJWT = (id) => {
+    return new Promise((resolve, reject) => {
+        jwt.sign({ id }, environment_1.ENVIRONMENT.JWT_SECRET, { expiresIn: '7d' }, (err, token) => {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(token);
+            }
+        });
+    });
 };
+exports.encodeJWT = encodeJWT;
+const decodeJWT = () => {
+    return new Promise((resolve, reject) => {
+        jwt.verify(environment_1.ENVIRONMENT.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(String(decoded));
+            }
+        });
+    });
+};
+exports.decodeJWT = decodeJWT;
