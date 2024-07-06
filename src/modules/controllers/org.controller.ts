@@ -54,14 +54,12 @@ export const getAnOrganisation = async(req: Request, res: Response) => {
   try {
     const org = await db.organisation.findFirst({
       where: {
-        AND: [
-          {
-            userId: userId,
+        id: orgId,
+        users: {
+          some: {
+            id: userId,
           },
-          {
-            id: orgId,
-          },
-        ],
+        },
       },
     });
 
@@ -100,7 +98,11 @@ export const createOrganisation = async (req: Request, res: Response) => {
       data: {
         name,
         description,
-        userId
+        users: {
+          connect: {
+            id: userId
+          }
+        }
       }
     })
 
@@ -133,12 +135,12 @@ export const addAUserToOrganisation = async (req: Request, res: Response) => {
 
 
   try{ 
-    await db.user.update({
+    await db.organisation.update({
       where: {
-        id: userId
+        id: orgId
       },
       data: {
-        organisations: {
+        users: {
           connect: {
             id: userId
           }

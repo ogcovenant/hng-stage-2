@@ -50,6 +50,7 @@ export const verifyJWT = async (
 
   const decoded = await decodeJWT(token);
 
-  req.user = decoded as string;
+  //@ts-ignore
+  req.user = decoded.id;
   next();
 };

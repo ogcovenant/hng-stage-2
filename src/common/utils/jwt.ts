@@ -20,7 +20,8 @@ export const decodeJWT = (token: string): Promise<string> => {
       if (err) {
         reject(err);
       } else {
-        resolve(String(decoded));
+        //@ts-ignore
+        resolve(decoded);
       }
     })
   })

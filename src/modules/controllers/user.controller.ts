@@ -7,19 +7,19 @@ export const getUserRecord = async (req: Request, res: Response) => {
   const userId = req.user;
   const reqId = req.params.id;
 
-  if (userId !== reqId) {
-    return res.status(401).json(
-      responseObject({
-        status: "unauthorized",
-        message: "you are not authorized to view this user's records",
-      })
-    );
-  }
-
   try {
     const user = await db.user.findFirst({
       where: {
         id: reqId,
+        organisations: {
+          some: {
+            users: {
+              some: {
+                id: userId,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -28,7 +28,7 @@ export const getUserRecord = async (req: Request, res: Response) => {
       return res.status(404).json(
         responseObject({
           status: "Not Found",
-          message: "no user with the provided id was found",
+          message: "either you are not authorized to view this user or no user with the provided id was found",
         })
       );
     }
@@ -41,7 +41,7 @@ export const getUserRecord = async (req: Request, res: Response) => {
           userId: user?.id,
           firstName: user?.firstName,
           lastName: user?.lastName,
-          email: user?.lastName,
+          email: user?.email,
           phone: user?.phone,
         },
       })
