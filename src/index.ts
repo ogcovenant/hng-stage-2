@@ -7,6 +7,7 @@ import { Request, Response, NextFunction } from "express";
 import authRouter from "./modules/routes/auth.routes";
 import userRouter from "./modules/routes/user.routes";
 import { verifyJWT } from "./common/middlewares/validator";
+import orgRouter from "./modules/routes/org.routes";
 
 const PORT = ENVIRONMENT.PORT
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/auth", authRouter)
 app.use('/api/users', verifyJWT, userRouter);
+app.use('/api/organisations', verifyJWT, orgRouter)
 
 app.get("/", (_, res: Response) => {
   res.status(200).json({ msg: "Hello World" })

@@ -5,6 +5,6 @@ import { validator } from '../../common/middlewares/validator'
 
 const userRouter = express.Router()
 
-userRouter.get("/users/:id", getUserRecordSchema, validator, getUserRecord)
+userRouter.get("/:id", getUserRecordSchema, validator, getUserRecord)
 
 export default userRouter
