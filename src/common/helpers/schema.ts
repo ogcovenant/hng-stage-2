@@ -43,6 +43,35 @@ export const loginSchema = [
 
 export const getUserRecordSchema = [
   param("id")
+    .isString()
+    .withMessage("userId must be a string")
+    .notEmpty()
+    .withMessage("userId must not be null"),
+];
+
+export const getAnOrganisationSchema = [
+  param("orgId")
+    .isString()
+    .withMessage("orgId must be a string")
+    .notEmpty()
+    .withMessage("orgId must not be null"),
+];
+
+export const createOrganisationSchema = [
+  body("name")
+    .isString()
+    .withMessage("organisation name must be a string")
+    .notEmpty()
+    .withMessage("organisation name must not be null"),
+  body("description")
+    .isString()
+    .withMessage("organisation description must be a string")
+    .notEmpty()
+    .withMessage("organisation description must not be null"),
+];
+
+export const addAUserToOrganisationSchema = [
+  body("userId")
   .isString()
   .withMessage("userId must be a string")
   .notEmpty()

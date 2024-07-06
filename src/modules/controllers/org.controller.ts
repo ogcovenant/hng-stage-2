@@ -6,51 +6,151 @@ export const getOrganisations = async (req: Request, res: Response) => {
   //@ts-ignore
   const userId = req.user;
 
-  try{
+  try {
     const user = await db.user.findFirst({
       where: {
-        id: userId
+        id: userId,
       },
       include: {
-        organisations: true
-      }
-    })
+        organisations: true,
+      },
+    });
 
-    if(!user || !user.id){
-      return res.status(401).json(responseObject({
-        status: 'Not Found',
-        message: 'User not found',
-        statusCode: 401
-      }))
+    if (!user || !user.id) {
+      return res.status(401).json(
+        responseObject({
+          status: "Not Found",
+          message: "User not found",
+          statusCode: 401,
+        })
+      );
     }
 
-    const organisations = user.organisations
+    const organisations = user.organisations;
+
+    return res.status(200).json(
+      responseObject({
+        status: "success",
+        message: "user's organisation successfully retrieved",
+        data: {
+          organisations: organisations.map((org) => ({
+            orgId: org.id,
+            name: org.name,
+            description: org.description,
+          })),
+        },
+      })
+    );
+  } catch (err) {
+    return res.status(500).json({ message: "an error occured!", err: err });
+  }
+};
+
+export const getAnOrganisation = async(req: Request, res: Response) => {
+  const orgId = req.params.orgId;
+  //@ts-ignore
+  const userId = req.user;
+
+  try {
+    const org = await db.organisation.findFirst({
+      where: {
+        AND: [
+          {
+            userId: userId,
+          },
+          {
+            id: orgId,
+          },
+        ],
+      },
+    });
+
+    //@ts-ignore
+    if (!org || !org.id) {
+      res.status(404).json(
+        responseObject({
+          status: "Not Found",
+          message: "organisation not found",
+          statusCode: 404,
+        })
+      );
+    }
 
     return res.status(200).json(responseObject({
       status: "success",
-      message: "user's organisation successfully retrieved",
+      message: "Organisation successfully retrieved",
       data: {
-        organisations: organisations.map((org) => ({
-          orgId: org.id,
-          name: org.name,
-          description: org.description
-        }))
+        orgId: org?.id,
+        name: org?.name,
+        description: org?.description
       }
     }))
-
-  }catch(err){
-    return res.status(500).json({ message: "an error occured!", err: err })
+  } catch (err) {
+    return res.status(500).json({ message: "an error occured!", err: err });
   }
-}
+};
 
-export const getAnOrganisation = (req: Request, res: Response) => {
+export const createOrganisation = async (req: Request, res: Response) => {
+  //@ts-ignore
+  const userId = req.user
+  const { name, description } = req.body
 
-}
+  try {
+    const organisation = await db.organisation.create({
+      data: {
+        name,
+        description,
+        userId
+      }
+    })
 
-export const createOrganisation = (req: Request, res: Response) => {
+    if(!organisation || !organisation.id){
+      return res.status(400).json(responseObject({
+        status: "Bad Request",
+        message: "Client error",
+        statusCode: 400
+      }))
+    }
 
-}
+    return res.status(201).json(responseObject({
+      status: "success",
+      message: "Organisation created successfully",
+      data: {
+        orgId: organisation.id,
+        name: organisation.description,
+        description: organisation.description
+      }
+    }))
+  } catch (err) {
+    return res.status(500).json({ message: "an error occured!", err })
+  }
+};
 
-export const getAnOrganisationUsers = (req: Request, res: Response) => {
+export const addAUserToOrganisation = async (req: Request, res: Response) => {
+  const orgId = req.params.orgId
+  //@ts-ignore
+  const { userId } = req.body
 
-}
+
+  try{ 
+    await db.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        organisations: {
+          connect: {
+            id: userId
+          }
+        }
+      }
+    })
+
+    return res.status(200).json(responseObject({
+      status: "success",
+      message: "User added to organisation successfully"
+    }))
+  }catch(err) {
+    return res.status(500).json({ message: "an error occured!", err })
+  }
+};
