@@ -30,7 +30,7 @@ export const createUser = async (req: Request, res: Response) => {
       lastName: lastName,
       email: email,
       password: await bcrypt.hash(password, Number(ENVIRONMENT.HASH_SALT)),
-      phone: phone,
+      phone: phone || null,
     };
 
     const user = await db.user.create({

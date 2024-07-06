@@ -21,11 +21,7 @@ export const signupSchema = [
     .withMessage("Password must be a string")
     .notEmpty()
     .withMessage("Password must not be null"),
-  body("phone")
-    .isString()
-    .withMessage("Phone must be a string")
-    .notEmpty()
-    .withMessage("Phone Number must not be null"),
+  body("phone").optional().isString().withMessage("Phone must be a string"),
 ];
 
 export const loginSchema = [
@@ -72,8 +68,8 @@ export const createOrganisationSchema = [
 
 export const addAUserToOrganisationSchema = [
   body("userId")
-  .isString()
-  .withMessage("userId must be a string")
-  .notEmpty()
-  .withMessage("userId must not be null"),
-]
+    .isString()
+    .withMessage("userId must be a string")
+    .notEmpty()
+    .withMessage("userId must not be null"),
+];

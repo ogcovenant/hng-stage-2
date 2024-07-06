@@ -14,15 +14,6 @@ export const encodeJWT = (id : string ): Promise<string> => {
   });
 }
 
-export const decodeJWT = (token: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, ENVIRONMENT.JWT_SECRET as string, (err, decoded) => {
-      if (err) {
-        reject(err);
-      } else {
-        //@ts-ignore
-        resolve(decoded);
-      }
-    })
-  })
+export const decodeJWT = (token: string) => {
+  return jwt.verify(token, ENVIRONMENT.JWT_SECRET as string)
 }
