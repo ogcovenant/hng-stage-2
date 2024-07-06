@@ -3,7 +3,7 @@ import { ENVIRONMENT } from "./common/config/environment";
 import cors from 'cors'
 import helmet from 'helmet'
 import logger from "./common/utils/logger";
-import { Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import authRouter from "./modules/routes/auth.routes";
 
 const PORT = ENVIRONMENT.PORT
@@ -20,6 +20,11 @@ app.use("/auth", authRouter)
 app.get("/", (_, res: Response) => {
   res.status(200).json({ msg: "Hello World" })
 })
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  logger(`Error: ${err.message}`);
+  res.status(500).json({ message: 'An error occurred!', error: err.message });
+});
 
 app.listen(PORT, () => {
   logger(`Server is live on port:${PORT} 🚀🚀🚀`);
