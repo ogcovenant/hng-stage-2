@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 export const signupSchema = [
   body("firstName")
@@ -40,3 +40,11 @@ export const loginSchema = [
     .notEmpty()
     .withMessage("Password must not be null"),
 ];
+
+export const getUserRecordSchema = [
+  param("id")
+  .isString()
+  .withMessage("userId must be a string")
+  .notEmpty()
+  .withMessage("userId must not be null"),
+]
