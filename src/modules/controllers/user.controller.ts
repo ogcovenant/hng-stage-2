@@ -4,7 +4,7 @@ import db from "../../common/config/dbconfig";
 
 export const getUserRecord = async (req: Request, res: Response) => {
   //@ts-ignore
-  const userId = req.id;
+  const userId = req.user;
   const reqId = req.params.id;
 
   if (userId !== reqId) {
@@ -24,7 +24,7 @@ export const getUserRecord = async (req: Request, res: Response) => {
     });
 
     //@ts-ignore
-    if (!user && !user.id) {
+    if (!user || !user.id) {
       return res.status(404).json(
         responseObject({
           status: "Not Found",

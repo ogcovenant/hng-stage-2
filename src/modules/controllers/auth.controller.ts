@@ -15,7 +15,8 @@ export const createUser = async (req: Request, res: Response) => {
       },
     });
 
-    if (existingUser && existingUser.email === email) {
+    //@ts-ignore
+    if (existingUser || existingUser.email === email) {
       return res.status(409).json(
         responseObject({
           status: "conflict",
@@ -46,7 +47,7 @@ export const createUser = async (req: Request, res: Response) => {
     const jwtToken = await encodeJWT(user.id);
 
     //@ts-ignore
-    if (!user && !user.id) {
+    if (!user || !user.id) {
       return res.status(400).json(
         responseObject({
           status: "Bad request",
@@ -88,7 +89,7 @@ export const checkUser = async (req: Request, res: Response) => {
     });
 
     //@ts-ignore
-    if (!existingUser && !existingUser.id) {
+    if (!existingUser || !existingUser.id) {
       return res.status(401).json(
         responseObject({
           status: "Bad request",
