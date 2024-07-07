@@ -75,6 +75,7 @@ export const createUser = async (req: Request, res: Response) => {
       })
     );
   } catch (err) {
+    console.log(err)
     return res.status(400).json(
       responseObject({
         status: "Bad request",
