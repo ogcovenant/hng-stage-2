@@ -8,7 +8,7 @@
     "start:dev": "ts-node-dev ./src/server.ts",
     "test": "jest"
   },
-  "main": "src/index.ts",
+  "main": "./build/server.js",
   "author": "Covenant Ogowale",
   "license": "MIT",
   "dependencies": {
