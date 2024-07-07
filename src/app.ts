@@ -39,6 +39,4 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: 'An error occurred!', error: err.message });
 });
 
-app.listen(PORT, () => {
-  logger(`Server is live on port:${PORT} 🚀🚀🚀`);
-})
+export default app

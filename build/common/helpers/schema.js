@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginSchema = exports.signupSchema = void 0;
+exports.addAUserToOrganisationSchema = exports.createOrganisationSchema = exports.getAnOrganisationSchema = exports.getUserRecordSchema = exports.loginSchema = exports.signupSchema = void 0;
 const express_validator_1 = require("express-validator");
 exports.signupSchema = [
     (0, express_validator_1.body)("firstName")
@@ -23,11 +23,7 @@ exports.signupSchema = [
         .withMessage("Password must be a string")
         .notEmpty()
         .withMessage("Password must not be null"),
-    (0, express_validator_1.body)("phone")
-        .isString()
-        .withMessage("Phone must be a string")
-        .notEmpty()
-        .withMessage("Phone Number must not be null"),
+    (0, express_validator_1.body)("phone").optional().isString().withMessage("Phone must be a string"),
 ];
 exports.loginSchema = [
     (0, express_validator_1.body)("email")
@@ -40,4 +36,37 @@ exports.loginSchema = [
         .withMessage("Password must be a string")
         .notEmpty()
         .withMessage("Password must not be null"),
+];
+exports.getUserRecordSchema = [
+    (0, express_validator_1.param)("id")
+        .isString()
+        .withMessage("userId must be a string")
+        .notEmpty()
+        .withMessage("userId must not be null"),
+];
+exports.getAnOrganisationSchema = [
+    (0, express_validator_1.param)("orgId")
+        .isString()
+        .withMessage("orgId must be a string")
+        .notEmpty()
+        .withMessage("orgId must not be null"),
+];
+exports.createOrganisationSchema = [
+    (0, express_validator_1.body)("name")
+        .isString()
+        .withMessage("organisation name must be a string")
+        .notEmpty()
+        .withMessage("organisation name must not be null"),
+    (0, express_validator_1.body)("description")
+        .isString()
+        .withMessage("organisation description must be a string")
+        .notEmpty()
+        .withMessage("organisation description must not be null"),
+];
+exports.addAUserToOrganisationSchema = [
+    (0, express_validator_1.body)("userId")
+        .isString()
+        .withMessage("userId must be a string")
+        .notEmpty()
+        .withMessage("userId must not be null"),
 ];

@@ -44,7 +44,7 @@ export const createUser = async (req: Request, res: Response) => {
       },
     });
 
-    const jwtToken = await encodeJWT(user.id);
+    const jwtToken = await encodeJWT(user.id, "7d");
 
     //@ts-ignore
     if (!user && !user.id) {

@@ -49,7 +49,7 @@ export const verifyJWT = async (
   }
 
   const decoded = await decodeJWT(token);
-
+  console.log(decoded)
   //@ts-ignore
   req.user = decoded.id;
   next();

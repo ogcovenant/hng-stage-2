@@ -22,13 +22,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.decodeJWT = exports.encodeJWT = void 0;
 const jwt = __importStar(require("jsonwebtoken"));
 const environment_1 = require("../config/environment");
-const encodeJWT = (id) => {
+const encodeJWT = (id, expiresIn) => {
     return new Promise((resolve, reject) => {
-        jwt.sign({ id }, environment_1.ENVIRONMENT.JWT_SECRET, { expiresIn: '7d' }, (err, token) => {
+        jwt.sign({ id }, environment_1.ENVIRONMENT.JWT_SECRET, { expiresIn: expiresIn }, (err, token) => {
             if (err) {
                 reject(err);
             }
@@ -39,16 +48,14 @@ const encodeJWT = (id) => {
     });
 };
 exports.encodeJWT = encodeJWT;
-const decodeJWT = () => {
-    return new Promise((resolve, reject) => {
-        jwt.verify(environment_1.ENVIRONMENT.JWT_SECRET, (err, decoded) => {
-            if (err) {
-                reject(err);
-            }
-            else {
-                resolve(String(decoded));
-            }
-        });
-    });
-};
+const decodeJWT = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const decoded = yield jwt.verify(token, environment_1.ENVIRONMENT.JWT_SECRET);
+        //@ts-ignore
+        return decoded.id;
+    }
+    catch (error) {
+        return null;
+    }
+});
 exports.decodeJWT = decodeJWT;

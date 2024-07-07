@@ -26,6 +26,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 email: email,
             },
         });
+        //@ts-ignore
         if (existingUser && existingUser.email === email) {
             return res.status(409).json((0, responseObject_1.responseObject)({
                 status: "conflict",
@@ -37,7 +38,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             lastName: lastName,
             email: email,
             password: yield bcryptjs_1.default.hash(password, Number(environment_1.ENVIRONMENT.HASH_SALT)),
-            phone: phone
+            phone: phone || null,
         };
         const user = yield dbconfig_1.default.user.create({
             data: Object.assign(Object.assign({}, userData), { organisations: {
@@ -46,13 +47,13 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                     },
                 } }),
         });
-        const jwtToken = yield (0, jwt_1.encodeJWT)(user.id);
+        const jwtToken = yield (0, jwt_1.encodeJWT)(user.id, "7d");
         //@ts-ignore
         if (!user && !user.id) {
             return res.status(400).json((0, responseObject_1.responseObject)({
                 status: "Bad request",
                 message: "Registration unsuccessful",
-                statusCode: 400
+                statusCode: 400,
             }));
         }
         return res.status(201).json((0, responseObject_1.responseObject)({
@@ -75,5 +76,50 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createUser = createUser;
-const checkUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
+const checkUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    try {
+        const existingUser = yield dbconfig_1.default.user.findFirst({
+            where: {
+                email: email,
+            },
+        });
+        //@ts-ignore
+        if (!existingUser || !existingUser.id) {
+            return res.status(401).json((0, responseObject_1.responseObject)({
+                status: "Bad request",
+                message: "Authentication failed",
+                statusCode: 401,
+            }));
+        }
+        //@ts-ignore
+        const passwordMatch = yield bcryptjs_1.default.compare(password, existingUser.password);
+        if (!passwordMatch) {
+            return res.status(401).json((0, responseObject_1.responseObject)({
+                status: "Bad request",
+                message: "Authentication failed",
+                statusCode: 401,
+            }));
+        }
+        //@ts-ignore
+        const jwtToken = yield (0, jwt_1.encodeJWT)(existingUser.id);
+        return res.status(200).json((0, responseObject_1.responseObject)({
+            status: "success",
+            message: "Login successful",
+            data: {
+                accessToken: jwtToken,
+                user: {
+                    userId: existingUser === null || existingUser === void 0 ? void 0 : existingUser.id,
+                    firstName: existingUser === null || existingUser === void 0 ? void 0 : existingUser.firstName,
+                    lastName: existingUser === null || existingUser === void 0 ? void 0 : existingUser.lastName,
+                    email: existingUser === null || existingUser === void 0 ? void 0 : existingUser.email,
+                    phone: existingUser === null || existingUser === void 0 ? void 0 : existingUser.phone
+                }
+            }
+        }));
+    }
+    catch (err) {
+        return res.status(500).json({ message: "An error occurred!", error: err });
+    }
+});
 exports.checkUser = checkUser;
