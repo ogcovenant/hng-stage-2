@@ -17,10 +17,11 @@ export const createUser = async (req: Request, res: Response) => {
 
     //@ts-ignore
     if (existingUser && existingUser.email === email) {
-      return res.status(409).json(
+      return res.status(400).json(
         responseObject({
-          status: "conflict",
-          message: "user with email already exists",
+          status: "Bad request",
+          message: "Registration unsuccessful",
+          statusCode: 400,
         })
       );
     }
@@ -74,7 +75,13 @@ export const createUser = async (req: Request, res: Response) => {
       })
     );
   } catch (err) {
-    return res.status(500).json({ message: "An error occurred!", error: err });
+    return res.status(400).json(
+      responseObject({
+        status: "Bad request",
+        message: "Registration unsuccessful",
+        statusCode: 400,
+      })
+    );
   }
 };
 
@@ -113,24 +120,32 @@ export const checkUser = async (req: Request, res: Response) => {
     }
 
     //@ts-ignore
-    const jwtToken = await encodeJWT(existingUser.id);
+    const jwtToken = await encodeJWT(existingUser.id, "7d");
 
-    return res.status(200).json(responseObject({
-      status: "success",
-      message: "Login successful",
-      data: {
-        accessToken: jwtToken,
-        user: {
-          userId: existingUser?.id,
-          firstName: existingUser?.firstName,
-          lastName: existingUser?.lastName,
-          email: existingUser?.email,
-          phone: existingUser?.phone
-        }
-      }
-    }))
-
+    return res.status(200).json(
+      responseObject({
+        status: "success",
+        message: "Login successful",
+        data: {
+          accessToken: jwtToken,
+          user: {
+            userId: existingUser?.id,
+            firstName: existingUser?.firstName,
+            lastName: existingUser?.lastName,
+            email: existingUser?.email,
+            phone: existingUser?.phone,
+          },
+        },
+      })
+    );
   } catch (err) {
-    return res.status(500).json({ message: "An error occurred!", error: err });
+    console.log(err)
+    return res.status(400).json(
+      responseObject({
+        status: "Bad request",
+        message: "Registration unsuccessful",
+        statusCode: 400,
+      })
+    );
   }
 };

@@ -3,73 +3,73 @@ import { body, param } from "express-validator";
 export const signupSchema = [
   body("firstName")
     .isString()
-    .withMessage("First name must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("First name must not be null"),
+    .withMessage("Invalid value"),
   body("lastName")
     .isString()
-    .withMessage("Last name must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("Last name must not be null"),
+    .withMessage("Invalid value"),
   body("email")
     .isEmail()
-    .withMessage("Email must be a valid email address")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("Email must not be null"),
+    .withMessage("Invalid value"),
   body("password")
     .isString()
-    .withMessage("Password must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("Password must not be null"),
-  body("phone").optional().isString().withMessage("Phone must be a string"),
+    .withMessage("Invalid value"),
+  body("phone").optional().isString().withMessage("Invalid value"),
 ];
 
 export const loginSchema = [
   body("email")
     .isEmail()
-    .withMessage("Email must be a valid email address")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("Email must not be null"),
+    .withMessage("Invalid value"),
   body("password")
     .isString()
-    .withMessage("Password must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("Password must not be null"),
+    .withMessage("Invalid value"),
 ];
 
 export const getUserRecordSchema = [
   param("id")
     .isString()
-    .withMessage("userId must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("userId must not be null"),
+    .withMessage("Invalid value"),
 ];
 
 export const getAnOrganisationSchema = [
   param("orgId")
     .isString()
-    .withMessage("orgId must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("orgId must not be null"),
+    .withMessage("Invalid value"),
 ];
 
 export const createOrganisationSchema = [
   body("name")
     .isString()
-    .withMessage("organisation name must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("organisation name must not be null"),
+    .withMessage("Invalid value"),
   body("description")
     .isString()
-    .withMessage("organisation description must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("organisation description must not be null"),
+    .withMessage("Invalid value"),
 ];
 
 export const addAUserToOrganisationSchema = [
   body("userId")
     .isString()
-    .withMessage("userId must be a string")
+    .withMessage("Invalid value")
     .notEmpty()
-    .withMessage("userId must not be null"),
+    .withMessage("Invalid value"),
 ];

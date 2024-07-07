@@ -1,18 +1,11 @@
 import db from "../common/config/dbconfig";
+import { generateUser } from "../common/helpers/generateUser";
 import { encodeJWT, decodeJWT } from "../common/utils/jwt";
 
 let user: any;
 
 beforeAll(async () => {
-  user = await db.user.create({
-    data: {
-      firstName: "Covenant",
-      lastName: "Ogowale",
-      email: "justcovenant@gmail.com",
-      password: "12345678",
-      phone: "12345678900",
-    },
-  });
+  user = await generateUser()
 });
 
 afterAll(async () => {
