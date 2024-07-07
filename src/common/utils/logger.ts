@@ -1,4 +1,4 @@
-export const logger = (msg: string) => {
+export const logger = (msg: any) => {
   console.log(`[LOG]   ${msg}`)
 }
 

@@ -4,6 +4,7 @@ import { responseObject } from "../../common/utils/responseObject";
 import { encodeJWT } from "../../common/utils/jwt";
 import bcrypt from "bcryptjs";
 import { ENVIRONMENT } from "../../common/config/environment";
+import logger from "../../common/utils/logger";
 
 export const createUser = async (req: Request, res: Response) => {
   const { firstName, lastName, email, password, phone } = req.body;
@@ -75,7 +76,7 @@ export const createUser = async (req: Request, res: Response) => {
       })
     );
   } catch (err) {
-    console.log(err)
+    logger(err)
     return res.status(400).json(
       responseObject({
         status: "Bad request",
