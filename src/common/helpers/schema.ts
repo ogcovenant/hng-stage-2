@@ -67,6 +67,11 @@ export const createOrganisationSchema = [
 ];
 
 export const addAUserToOrganisationSchema = [
+  param("orgId")
+    .isString()
+    .withMessage("Invalid value")
+    .notEmpty()
+    .withMessage("Invalid value"),
   body("userId")
     .isString()
     .withMessage("Invalid value")

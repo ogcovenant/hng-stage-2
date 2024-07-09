@@ -119,7 +119,7 @@ export const createOrganisation = async (req: Request, res: Response) => {
       message: "Organisation created successfully",
       data: {
         orgId: organisation.id,
-        name: organisation.description,
+        name: organisation.name,
         description: organisation.description
       }
     }))

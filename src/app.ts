@@ -22,6 +22,11 @@ app.get("/", (_, res: Response) => {
   res.status(200).json({ msg: "Hello World" })
 })
 
+app.use(( req: Request, res: Response, next: NextFunction ) => {
+  logger(`${ req.method } ${req.url}`)
+  next()
+})
+
 
 app.use("/auth", authRouter)
 app.use("/api/users", verifyJWT, userRouter);
